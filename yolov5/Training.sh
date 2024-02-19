@@ -8,6 +8,6 @@
 # Activate environment
 uenv verbose cuda-11.4.0 cudnn-11.4-8.2.4
 uenv miniconda3-py39
-conda activate training_env
+conda activate Training_env
 # Run the training script
 python -u train.py --img 640 --batch 16 --epochs 100 --data custom_data.yaml --weights yolov5s.pt --nosave --cache
