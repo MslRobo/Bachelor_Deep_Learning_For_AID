@@ -16,7 +16,10 @@ val: data/Tunnel7/images/val # val images (relative to 'path') 128 images
 names:
   0: car
   1: truck
-  2: bus
+  2: buss
+  3: bicycle
+  4: motorcycle
+  5: person
 
 
 # Download script/URL (optional)
