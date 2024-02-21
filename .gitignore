@@ -12,6 +12,13 @@ training/yolov5/*
 !training/yolov5/dataset.yaml
 *.pt
 
+#Data files
+*.mp4
+*.jpg
+*.avi
+*.txt
+*.yaml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -22,6 +29,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -74,6 +82,34 @@ cover/
 
 # Sphinx documentation
 docs/_build/
+
+
+# Django stuff:
+*.log
+local_settings.py
+
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Rope project settings
+.ropeproject
 
 # PyBuilder
 .pybuilder/
