@@ -83,6 +83,7 @@ class Tracker:
 
         # Update track set.
         for track_idx, detection_idx in matches:
+            print("Track idx: ", track_idx)
             self.tracks[track_idx].update(
                 self.kf, detections[detection_idx])
         for track_idx in unmatched_tracks:
@@ -90,6 +91,8 @@ class Tracker:
         for detection_idx in unmatched_detections:
             self._initiate_track(detections[detection_idx])
         self.tracks = [t for t in self.tracks if not t.is_deleted()]
+
+        print("Tracks: ", self.tracks)
 
         # Update distance metric.
         active_targets = [t.track_id for t in self.tracks if t.is_confirmed()]
@@ -141,6 +144,7 @@ class Tracker:
 
         matches = matches_a + matches_b
         unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
+        print("Matches: ", matches)
         return matches, unmatched_tracks, unmatched_detections
 
     def _initiate_track(self, detection):
