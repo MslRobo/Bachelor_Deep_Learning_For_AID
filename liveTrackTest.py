@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 from tools.deep_sort import nn_matching, linear_assignment, preprocessing
 from tools.deep_sort import detection as dt
+from tools.deep_sort import iou_matching as iou
 from tools.deep_sort.tracker import Tracker
 from tools import visualize_objects as vo
 from tools.helpers import generate_detections as gdet
@@ -19,11 +20,11 @@ encoder = gdet.create_box_encoder("tools/model_data/mars-small128.pb", batch_siz
 
 # DeepSORT parameters
 nn_budget = 100
-max_cosine_distance = 0.4
-track_init_iou = 0.4
-track_iou_min = 0.1
-max_age = 30
-nms_max_overlap = 0.7
+max_cosine_distance = 0.7
+track_init_iou = 0.5
+track_iou_min = 0.3
+max_age = 10
+nms_max_overlap = 0.2
 
 # Optional display of detected objects
 show_det = True
@@ -132,7 +133,8 @@ while cap.isOpened():
         # detection = dt.Detection(bbox_xywh, confidences, class_names, class_ids)
         tracker.predict()
         tracker.update(detections)
-        tracks = tracker.tracks
+    
+    tracks = tracker.tracks
 
     # Visualize and display frame
     print(tracks)
