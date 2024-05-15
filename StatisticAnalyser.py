@@ -15,22 +15,6 @@ parser.add_argument("-s",
                     "--source",
                     help="Select the source directory, This is expecting a directory created from the session config file with its setup, expects only name of the directory",
                     type=str)
-parser.add_argument("-c",
-                    "--confMtx",
-                    help="Specify to skip confMtx generation",
-                    default=0)
-parser.add_argument("--brightness_graph",
-                    help="Specify to skip graph generation",
-                    default=1)
-parser.add_argument("-b",
-                    "--boxplot",
-                    help="Specify whether or not to generate box plots",
-                    default=0,
-                    type=int)
-parser.add_argument("--confidence",
-                    help="Specify whether or not to generate confidence intervals",
-                    default=0,
-                    type=int)
 
 args = parser.parse_args()
 
@@ -474,15 +458,7 @@ def main():
     videoOutputPath = os.path.join(outputDir, )
 
     # Visualizing data
-    print(confusionMatrix)
-    if args.confMtx != 1:
-        confMatrix(confusionMatrix, outputDir)
-
-    # if args.boxplot != 1:
-    #     boxPlot(outputDir)
-
-    if args.brightness_graph != 1:
-        brightness_graphing(graphs, outputDir)
+    confMatrix(confusionMatrix, outputDir)
 
     baseBaseOutputDir = outputDir
     for key in dataframe:
