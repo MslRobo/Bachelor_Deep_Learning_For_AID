@@ -24,7 +24,7 @@ Follow the installation steps provided [here](https://github.com/ultralytics/yol
 
 ## Datasets
 
-1. Download the datasets from [here](https://drive.google.com/drive/folders/1hNMBL2MNyz5dWZdi1BR1o1X-3yypdCkJ?usp=sharing).
+1. Download the datasets from [here]([https://drive.google.com/drive/folders/1hNMBL2MNyz5dWZdi1BR1o1X-3yypdCkJ?usp=sharing](https://drive.google.com/drive/folders/1GZkpp6you43HBV1QzOdCh-wQYwQwcgvV?usp=share_link)).
 2. Move the datasets into the folder "./data/" (Folder structure is given in the README file located in the folder "./data")
 
 ## YOLOv5:
