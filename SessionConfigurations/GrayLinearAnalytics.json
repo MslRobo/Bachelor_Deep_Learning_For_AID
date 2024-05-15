@@ -1,0 +1,40 @@
+{
+    "type": "RunConfig",
+    "name": "GrayLinearAnalytics",
+    "dir": "GrayLinearAnalytics",
+    "data": [
+        "Video1",
+        "Video2",
+        "Video3",
+        "Video4",
+        "Video5",
+        "Video6",
+        "Video7",
+        "Video8",
+        "Video9",
+        "Video10",
+        "Video11",
+        "Video12"
+    ],
+    "configurations": {
+        "argOverride": true,
+        "args": {
+            "CommentValue": "This is a comment value and should be removed. Args are used in the case that argOverride is true for default values leave these unchanged",
+            "model": "",
+            "checkpoint": "",
+            "pretrained": "",
+            "skip_frames": 0,
+            "resize": 1.0,
+            "noise": "",
+            "tracking": "",
+            "file": "GrayLinearAnalytics",
+            "img_enh": "gray_linear",
+            "mode": "",
+            "show": 1,
+            "statistics": "statistics",
+            "queue": "",
+            "datamode": "json",
+            "filetype": "jpg"
+        }
+    }
+}

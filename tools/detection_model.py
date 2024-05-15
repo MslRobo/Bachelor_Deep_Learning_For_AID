@@ -1,12 +1,13 @@
 import os
 import tensorflow as tf
 import torch
+from ultralytics import YOLO
 
 import numpy as np
-from object_detection.utils import label_map_util
-#from object_detection.utils import visualization_utils as viz_utils
-from object_detection.builders import model_builder
-from object_detection.utils import config_util
+# from object_detection.utils import label_map_util
+# #from object_detection.utils import visualization_utils as viz_utils
+# from object_detection.builders import model_builder
+# from object_detection.utils import config_util
 
 
 """
@@ -66,6 +67,12 @@ class Detection_Model:
         elif self.model_type == "yolov5_trained":
             model = torch.hub.load('ultralytics/yolov5', 'custom', path='training/yolov5/yolov5/runs/train/yolov5x_trained/weights/best.pt')
             self.model = model
+        elif self.model_type == "yolov7":
+            model = torch.hub.load('WongKinYiu/yolov7', 'custom', 'yolov7x.pt')
+            self.model = model
+        elif self.model_type == "yolov8":
+            model = YOLO("yolov8x.pt")
+            self.model = model
         else:
             """
             ************************************************************************************************
@@ -80,16 +87,16 @@ class Detection_Model:
 
             ************************************************************************************************
             """
-            gpus = tf.config.experimental.list_physical_devices('GPU')
-            for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, True)
+            # gpus = tf.config.experimental.list_physical_devices('GPU')
+            # for gpu in gpus:
+            #     tf.config.experimental.set_memory_growth(gpu, True)
 
-            self.configs = config_util.get_configs_from_pipeline_file(self.paths['PIPELINE_CONFIG'])
-            self.model = model_builder.build(model_config=self.configs['model'], is_training=False)
+            # self.configs = config_util.get_configs_from_pipeline_file(self.paths['PIPELINE_CONFIG'])
+            # self.model = model_builder.build(model_config=self.configs['model'], is_training=False)
 
-            self.ckpt = tf.compat.v2.train.Checkpoint(model=self.model)
-            self.ckpt.restore(os.path.join(self.paths['CHECKPOINT_PATH'], self.ckpt_no)).expect_partial()
-            self.category_index = label_map_util.create_category_index_from_labelmap(self.paths['LABELMAP'])
+            # self.ckpt = tf.compat.v2.train.Checkpoint(model=self.model)
+            # self.ckpt.restore(os.path.join(self.paths['CHECKPOINT_PATH'], self.ckpt_no)).expect_partial()
+            # self.category_index = label_map_util.create_category_index_from_labelmap(self.paths['LABELMAP'])
             """
             END
             """
@@ -97,15 +104,29 @@ class Detection_Model:
     def detect(self, frame, w=0, h=0):
         return_object = {"frame": frame, "boxes": [], "scores": [], "object_classes": []}
         
-        if self.model_type == "yolov5" or self.model_type == "yolov5_trained":
+        if self.model_type == "yolov5" or self.model_type == "yolov5_trained" or self.model_type == "yolov7":
             results = self.model(frame)
+            # print("\nYOLOV5!!!!!!!!!!!!:", results, "\n", type(results), "\n===============================")
             df = results.pandas().xyxy[0]
+            # print("\nYOLOV5 DF !!!!!!!!!!!!:", df, "\n", type(df), "\n===============================")
             for row in df.itertuples():
                 obj_class = str(row[7]).lower()
                 if obj_class not in self.classes:
-                    continue
+                    # NOTE: This continue was removed to allow for the model to classify anything it found as a road anomaly. This is a lackluster approach to introduce Road anomaly detections.
+                    # No real statistics can be drawn from this as no road anomaly was annotated in the dataset and therefore we have no way of verifying the accuracy of the detection
+                    # continue
+                    obj_class = "Road anomaly"
                 return_object["boxes"].append([float(row[1]), float(row[2]), (float(row[3])-float(row[1])), (float(row[4])-float(row[2]))])
                 return_object["scores"].append(float(row[5]))
+                return_object["object_classes"].append(obj_class)
+        elif self.model_type == "yolov8":
+            results = self.model.predict(source=[frame])
+            result = results[0].cuda().cpu().to("cpu").numpy()
+            for index in range(len(result.boxes.xyxy)):
+                box = result.boxes.xyxy[index]
+                obj_class = result.boxes.cls[index]
+                return_object["boxes"].append([float(box[0]), float(box[1]), (float(box[2])-float(box[0])), (float(box[3])-float(box[1]))])
+                return_object["scores"].append(float(result.boxes.conf[index]))
                 return_object["object_classes"].append(obj_class)
         else:
             image_np = np.array(frame)

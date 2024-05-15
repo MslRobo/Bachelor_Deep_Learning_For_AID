@@ -1,0 +1,6 @@
+{
+    "type": "SessionConfig",
+    "runConfig": [
+        "Array containing all run configuration files to be ran"
+    ]
+}

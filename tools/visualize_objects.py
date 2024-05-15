@@ -35,10 +35,23 @@ def draw_text(image, track, text):
 
 def draw_rectangle(image, track, color):
     object = track.to_tlbr()
-    
+    0
     start_point, end_point = (int(object[0]), int(object[1])), (int(object[2]), int(object[3]))
     color_rectangle = color
     thickness_rectangle = 2
     
     cv2.rectangle(image, start_point, end_point, color_rectangle, thickness_rectangle)
+
+def draw_parallelogram(image, top_left, top_right, bottom_left, bottom_right):
+    thickness = 2
+    color = (57, 255, 20)
+    # print(top_left)
+    top_left = (int(top_left[0]), int(top_left[1]))
+    top_right = (int(top_right[0]), int(top_right[1]))
+    bottom_left = (int(bottom_left[0]), int(bottom_left[1]))
+    bottom_right = (int(bottom_right[0]), int(bottom_right[1]))
+    cv2.line(image, top_left, top_right, color, thickness)
+    cv2.line(image, top_right, bottom_right, color, thickness)
+    cv2.line(image, bottom_right, bottom_left, color, thickness)
+    cv2.line(image, bottom_left, top_left, color, thickness)
     

@@ -6,6 +6,7 @@ physical_devices = tf.config.experimental.list_physical_devices('GPU')
 if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
 import numpy as np
+from ultralytics import YOLO
 
 from deep_sort import preprocessing, nn_matching
 from deep_sort.detection import Detection
@@ -46,6 +47,8 @@ class Tracking_Model:
             """
             END
             """
+        elif self.tracker_type == "yolov8":
+            tracker = YOLO('yolov8x.pt')
         else:
             tracker = Simple_Tracker()
         self.tracker = tracker

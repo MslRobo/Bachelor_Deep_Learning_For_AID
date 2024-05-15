@@ -1,0 +1,24 @@
+{
+    "type": "RunConfig",
+    "name": "Name for the desired output directory, if inside a SessionConfig, directory will be placed within the session output dir",
+    "data": [
+        "Array of all mp4 files to be analyzed in the running config"
+    ],
+    "configurations": {
+        "argOverride": "Should console line arguments be overridden? Expected value is a boolean (without string marks '')",
+        "args": {
+            "CommentValue": "This is a comment value and should be removed. Args are used in the case that argOverride is true for default values leave these unchanged",
+            "model": "",
+            "checkpoint": "",
+            "pretrained": "",
+            "skip_frames": 0,
+            "resize": 1.0,
+            "tracking": "",
+            "file": "",
+            "img_enh": "",
+            "mode": "",
+            "show": 0,
+            "statistics": 0
+        }
+    }
+}
