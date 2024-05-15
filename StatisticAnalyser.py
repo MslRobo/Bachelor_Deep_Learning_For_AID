@@ -330,11 +330,8 @@ def main():
     graphs = []
     graphDict = {'statInfo': {}}
     confusionMatrix = []
-    dataframe = {
-        'img_enh': "",
-        'video_stats': [],
-        'dataset_stats': {}
-    }
+    dataframe = {}
+    dataframes = []
 
     detection_accuracy = []
     detection_accuracy_adjusted = []
@@ -415,7 +412,7 @@ def main():
         mean_detection_time.append(stat['mean_detection_time'])
         mean_tracking_time.append(stat['mean_tracking_time'])
         mean_total_time.append(stat['mean_total_time'])
-        video_data = {'filename': filename, 'frame_data': {}, 'centerpoints': {'x': [], 'y': []}}
+        video_data = {'filename': filename, 'img_enh': statInfo['image_enhancement'], 'frame_data': {}, 'centerpoints': {'x': [], 'y': []}}
         for frame in stat['frame_data']:
             
             if video_data['frame_data'] == {}:
@@ -446,26 +443,31 @@ def main():
         video_data['centerpoints']['x'] = stat['detection_data']['centerpoint']['x']
         video_data['centerpoints']['y'] = stat['detection_data']['centerpoint']['y']
 
-        dataframe['video_stats'].append(video_data)
+        if statInfo['image_enhancement'] in dataframe:
+            dataframe[statInfo['image_enhancement']]['video_stats'].append(video_data)
+        else:
+            dataframe[statInfo['image_enhancement']] = {
+                'video_stats': [video_data],
+                'dataset_stats': {}
+            }
         
         true_labels = true_labels + stat['detection_data']['true_labels']
         pred_labels = pred_labels + stat['detection_data']['predicted_labels']
 
-
-    dataframe['img_enh'] = statInfo['image_enhancement']
-    dataframe['dataset_stats'] = {
-        'detection_accuracy': sum(detection_accuracy) / len(detection_accuracy),
-        'detection_accuracy_adjusted': sum(detection_accuracy_adjusted) / len(detection_accuracy_adjusted),
-        'tracking_accuracy': sum(tracking_accuracy) / len(tracking_accuracy),
-        'tracking_id_switches': sum(tracking_id_switches) / len(tracking_id_switches),
-        'tracking_id_duplicates': sum(tracking_id_duplicates) / len(tracking_id_duplicates),
-        'incident_accuracy': sum(incident_accuracy) / len(incident_accuracy),
-        'mean_detection_time': sum(mean_detection_time) / len(mean_detection_time),
-        'mean_tracking_time': sum(mean_tracking_time) / len(mean_tracking_time),
-        'mean_total_time': sum(mean_total_time) / len(mean_total_time),
-        'true_labels': true_labels,
-        'pred_labels': pred_labels
-    }
+        dataframe[statInfo['image_enhancement']]['dataset_stats'] = {
+            'img_enh': statInfo['image_enhancement'],
+            'detection_accuracy': sum(detection_accuracy) / len(detection_accuracy),
+            'detection_accuracy_adjusted': sum(detection_accuracy_adjusted) / len(detection_accuracy_adjusted),
+            'tracking_accuracy': sum(tracking_accuracy) / len(tracking_accuracy),
+            'tracking_id_switches': sum(tracking_id_switches) / len(tracking_id_switches),
+            'tracking_id_duplicates': sum(tracking_id_duplicates) / len(tracking_id_duplicates),
+            'incident_accuracy': sum(incident_accuracy) / len(incident_accuracy),
+            'mean_detection_time': sum(mean_detection_time) / len(mean_detection_time),
+            'mean_tracking_time': sum(mean_tracking_time) / len(mean_tracking_time),
+            'mean_total_time': sum(mean_total_time) / len(mean_total_time),
+            'true_labels': true_labels,
+            'pred_labels': pred_labels
+        }
         
 
 
@@ -482,41 +484,43 @@ def main():
     if args.brightness_graph != 1:
         brightness_graphing(graphs, outputDir)
 
-    baseOutputDir = os.path.join(outputDir, dataframe['img_enh'])
-    print(dataframe['img_enh'])
-    print("\n")
-    print(statInfo['image_enhancement'])
-    if not os.path.exists(baseOutputDir):
-        os.mkdir(baseOutputDir)
-    for video in dataframe['video_stats']:
-        filename = video['filename']
-        outputDir = os.path.join(baseOutputDir, filename.split('.')[0])
-        if not os.path.exists(outputDir):
-            os.mkdir(outputDir)
-        df = pd.DataFrame(video['frame_data'])
+    baseBaseOutputDir = outputDir
+    for key in dataframe:
+        dafa = dataframe[key]
+        baseOutputDir = os.path.join(baseBaseOutputDir, dafa['dataset_stats']['img_enh'])
+        print("\n")
+        print(dafa['dataset_stats']['img_enh'])
+        if not os.path.exists(baseOutputDir):
+            os.mkdir(baseOutputDir)
+        for video in dafa['video_stats']:
+            filename = video['filename']
+            outputDir = os.path.join(baseOutputDir, filename.split('.')[0])
+            if not os.path.exists(outputDir):
+                os.mkdir(outputDir)
+            df = pd.DataFrame(video['frame_data'])
+            
+            heatmap_vals = {
+                'x_coords': video['centerpoints']['x'],
+                'y_coords': video['centerpoints']['y']
+            }
+
+            # heatmap_vals = pd.DataFrame(heatmap_vals)
+
+            over_time_performance(df, outputDir)
+            incident_analysis_graph(df, outputDir)
+            detection_heatmap(heatmap_vals, outputDir)
+            system_load_analysis(df, outputDir)
         
-        heatmap_vals = {
-            'x_coords': video['centerpoints']['x'],
-            'y_coords': video['centerpoints']['y']
+        roc_values = {
+            'true_labels': dafa['dataset_stats']['true_labels'],
+            'pred_scores': dafa['dataset_stats']['pred_labels']
         }
-
-        # heatmap_vals = pd.DataFrame(heatmap_vals)
-
-        over_time_performance(df, outputDir)
-        incident_analysis_graph(df, outputDir)
-        detection_heatmap(heatmap_vals, outputDir)
-        system_load_analysis(df, outputDir)
-    
-    roc_values = {
-        'true_labels': dataframe['dataset_stats']['true_labels'],
-        'pred_scores': dataframe['dataset_stats']['pred_labels']
-    }
-    outerDf = pd.DataFrame(dataframe['dataset_stats'])
-    datasetConfMatrix(confMatrixValues, baseOutputDir)
-    detection_accuracy_bar(outerDf, baseOutputDir)
-    tracking_analysis_bar(outerDf, baseOutputDir)
-    detection_time_analysis(outerDf, baseOutputDir)
-    # roc_recall_curves(roc_values, baseOutputDir)
+        outerDf = pd.DataFrame(dafa['dataset_stats'])
+        datasetConfMatrix(confMatrixValues, baseOutputDir)
+        detection_accuracy_bar(outerDf, baseOutputDir)
+        tracking_analysis_bar(outerDf, baseOutputDir)
+        detection_time_analysis(outerDf, baseOutputDir)
+        # roc_recall_curves(roc_values, baseOutputDir)
 
 
 
