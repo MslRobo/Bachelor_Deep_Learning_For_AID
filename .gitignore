@@ -1,4 +1,6 @@
 .DS_Store
+legacyPresets
+Exception referenced in liveTrack.png
 
 # Dataset folder
 data/*
@@ -7,10 +9,28 @@ data/*
 # TFRecord files
 *.record
 
+# TensorFlowApi
+tools/tensorflowapi/*
+
 # YOLOv5
 training/yolov5/*
 !training/yolov5/dataset.yaml
 *.pt
+
+#Data files
+*.mp4
+*.jpg
+*.avi
+*.txt
+*.yaml
+SessionConfigurations/*.json
+!SessionConfigurations/StandardAnalysis.json
+!SessionConfigurations/GrayLinearAnalytics.json
+!SessionConfigurations/GrayNonLinearAnalytics.json
+!SessionConfigurations/he.json
+!SessionConfigurations/Masking.json
+!SessionConfigurations/NoAlterations.json
+!SessionConfigurations/*Blueprint.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -22,6 +42,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -74,6 +95,34 @@ cover/
 
 # Sphinx documentation
 docs/_build/
+
+
+# Django stuff:
+*.log
+local_settings.py
+
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Rope project settings
+.ropeproject
 
 # PyBuilder
 .pybuilder/
@@ -154,3 +203,12 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+/training/tensorflowapi
+/training/pre-trained-models
+/tools/deep_sort
+/tools/deep_sort
+AnnotationsConverter.py
+liveTrackTest.py
+liveTrackTest.py
+/TensorFlowAnnotations
+/tools/deep_sort

@@ -1,0 +1,11 @@
+{
+    "type": "SessionConfig",
+    "dir": "StandardAnalysis",
+    "runConfig": [
+        "GrayLinearAnalytics.json",
+        "GrayNonLinearAnalytics.json",
+        "Masking.json",
+        "NoAlterations.json",
+        "he.json"
+    ]
+}
