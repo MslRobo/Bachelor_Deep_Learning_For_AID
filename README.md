@@ -28,7 +28,7 @@ To test the models on the dataset run the recommended command:
 - *It is recommended to run the full command though a short verison of without flags could work.*
 
 
-#Refrences:
+# Refrences:
 This bachelor thesis expands opon the work conducted by Alexander Vedvik in his bachlor thesis. As this bachelor thesis was to improve opon his work alot of the source code will be the same and therefore proper separation of his original work and our work proved difficult as alot of the improvements had to be conducted inside his files. The bachelor thesis of Aleksander Vedvik can be found [here](https://hdl.handle.net/11250/3003555) and the corresponding github repository can be found [here](https://github.com/aleksander-vedvik/Bachelor/tree/main)
 - Reused source code:
   - [TFODCourse](https://github.com/nicknochnack/TFODCourse), Nicholas Renotte
